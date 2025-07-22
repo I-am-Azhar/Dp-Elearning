@@ -85,6 +85,29 @@ async function getPurchasedCourses(req, res) {
   res.json({ courses: user.purchasedCourses });
 }
 
+async function getCoursesWithStudentCount(req, res) {
+  try {
+    const courses = await Course.find();
+    // For each course, count users who purchased it
+    const courseIds = courses.map(c => c._id);
+    const users = await User.find({ purchasedCourses: { $in: courseIds } }, 'purchasedCourses');
+    const courseStudentCounts = {};
+    users.forEach(user => {
+      user.purchasedCourses.forEach(cid => {
+        const id = cid.toString();
+        courseStudentCounts[id] = (courseStudentCounts[id] || 0) + 1;
+      });
+    });
+    const result = courses.map(course => ({
+      ...course.toObject(),
+      studentCount: courseStudentCounts[course._id.toString()] || 0
+    }));
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 module.exports = {
   createCourse,
   getCourses,
@@ -93,4 +116,5 @@ module.exports = {
   deleteCourse,
   purchaseCourse,
   getPurchasedCourses,
+  getCoursesWithStudentCount,
 }; 

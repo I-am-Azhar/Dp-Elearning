@@ -19,7 +19,7 @@ exports.register = async (req, res) => {
     // Create JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.json({ user: { id: user._id, name: user.name, email: user.email }, token });
+    res.json({ user: { id: user._id, name: user.name, email: user.email, role: user.role }, token });
   } catch (err) {
     console.error('Registration error:', err); // <--- Add this line
     res.status(500).json({ message: 'Server error' });
@@ -37,7 +37,7 @@ exports.login = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.json({ user: { id: user._id, name: user.name, email: user.email }, token });
+    res.json({ user: { id: user._id, name: user.name, email: user.email, role: user.role }, token });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }

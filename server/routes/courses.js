@@ -18,6 +18,9 @@ router.post('/', authMiddleware, requireRole('admin'), courseController.createCo
 router.put('/:id', authMiddleware, requireRole('admin'), courseController.updateCourse);
 router.delete('/:id', authMiddleware, requireRole('admin'), courseController.deleteCourse);
 
+// Admin only: get all courses with student count
+router.get('/admin/all-with-students', authMiddleware, requireRole('admin'), courseController.getCoursesWithStudentCount);
+
 // Purchase course
 router.post('/purchase', authMiddleware, courseController.purchaseCourse);
 
