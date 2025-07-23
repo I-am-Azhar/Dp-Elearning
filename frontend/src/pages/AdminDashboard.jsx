@@ -7,9 +7,7 @@ import api from "../api";
 const courseSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
-  category: z.string().min(1, "Category is required"),
-  image: z.string().url("Image must be a valid URL"),
-  instructor: z.string().min(1, "Instructor name is required"),
+  thumbnail: z.string().url("Thumbnail must be a valid URL"),
   price: z.coerce.number().positive("Price must be positive"),
 });
 
@@ -19,9 +17,7 @@ export default function AdminDashboard() {
   const [form, setForm] = useState({
     title: "",
     description: "",
-    category: "",
-    image: "",
-    instructor: "",
+    thumbnail: "",
     price: "",
   });
   const [errors, setErrors] = useState({});
@@ -97,7 +93,7 @@ export default function AdminDashboard() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setMessage("Course added successfully!");
-      setForm({ title: "", description: "", category: "", image: "", instructor: "", price: "" });
+      setForm({ title: "", description: "", thumbnail: "", price: "" });
       fetchCourses(); // Refresh course list after adding
     } catch (err) {
       setMessage(err.response?.data?.error || "Failed to add course");
@@ -112,9 +108,7 @@ export default function AdminDashboard() {
     setEditForm({
       title: course.title,
       description: course.description,
-      category: course.category,
-      image: course.image || "",
-      instructor: course.instructor || "",
+      thumbnail: course.thumbnail || "",
       price: course.price,
     });
     setEditErrors({});
@@ -183,7 +177,7 @@ export default function AdminDashboard() {
             <div key={course._id} className="border-2 border-black rounded shadow p-4 bg-white">
               <h3 className="text-xl font-semibold mb-2 text-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{course.title}</h3>
               <div className="text-gray-700 mb-1">Students: {course.studentCount}</div>
-              <div className="text-gray-600 text-sm">Category: {course.category}</div>
+              <div className="text-gray-600 text-sm">Price: ₹{course.price}</div>
             </div>
           ))}
         </div>
@@ -207,19 +201,9 @@ export default function AdminDashboard() {
           {errors.description && <div className="text-red-500 text-sm mt-1">{errors.description}</div>}
         </div>
         <div>
-          <label className="block mb-1 font-medium">Category</label>
-          <input name="category" value={form.category} onChange={handleChange} className="w-full border p-2 rounded" />
-          {errors.category && <div className="text-red-500 text-sm mt-1">{errors.category}</div>}
-        </div>
-        <div>
-          <label className="block mb-1 font-medium">Image URL</label>
-          <input name="image" value={form.image} onChange={handleChange} className="w-full border p-2 rounded" />
-          {errors.image && <div className="text-red-500 text-sm mt-1">{errors.image}</div>}
-        </div>
-        <div>
-          <label className="block mb-1 font-medium">Instructor Name</label>
-          <input name="instructor" value={form.instructor} onChange={handleChange} className="w-full border p-2 rounded" />
-          {errors.instructor && <div className="text-red-500 text-sm mt-1">{errors.instructor}</div>}
+          <label className="block mb-1 font-medium">Thumbnail URL</label>
+          <input name="thumbnail" value={form.thumbnail} onChange={handleChange} className="w-full border p-2 rounded" />
+          {errors.thumbnail && <div className="text-red-500 text-sm mt-1">{errors.thumbnail}</div>}
         </div>
         <div>
           <label className="block mb-1 font-medium">Price (INR)</label>
@@ -246,12 +230,8 @@ export default function AdminDashboard() {
                   {editErrors.title && <div className="text-red-500 text-sm">{editErrors.title}</div>}
                   <textarea name="description" value={editForm.description} onChange={handleEditChange} className="border p-2 rounded" />
                   {editErrors.description && <div className="text-red-500 text-sm">{editErrors.description}</div>}
-                  <input name="category" value={editForm.category} onChange={handleEditChange} className="border p-2 rounded" />
-                  {editErrors.category && <div className="text-red-500 text-sm">{editErrors.category}</div>}
-                  <input name="image" value={editForm.image} onChange={handleEditChange} className="border p-2 rounded" />
-                  {editErrors.image && <div className="text-red-500 text-sm">{editErrors.image}</div>}
-                  <input name="instructor" value={editForm.instructor} onChange={handleEditChange} className="border p-2 rounded" />
-                  {editErrors.instructor && <div className="text-red-500 text-sm">{editErrors.instructor}</div>}
+                  <input name="thumbnail" value={editForm.thumbnail} onChange={handleEditChange} className="border p-2 rounded" />
+                  {editErrors.thumbnail && <div className="text-red-500 text-sm">{editErrors.thumbnail}</div>}
                   <input name="price" value={editForm.price} onChange={handleEditChange} className="border p-2 rounded" type="number" min="1" />
                   {editErrors.price && <div className="text-red-500 text-sm">{editErrors.price}</div>}
                   <div className="flex gap-2 mt-2">
@@ -263,7 +243,7 @@ export default function AdminDashboard() {
                 <>
                   <h3 className="text-xl font-semibold mb-2 text-black drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{course.title}</h3>
                   <div className="text-gray-600 mb-1">Students: {course.studentCount}</div>
-                  <div className="text-gray-500 text-sm mb-2">Category: {course.category}</div>
+                  <div className="text-gray-500 text-sm mb-2">Price: ₹{course.price}</div>
                   <div className="flex gap-2 mt-2">
                     <button className="bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-1 rounded" onClick={() => startEdit(course)}>Edit</button>
                     <button className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded" onClick={() => handleDelete(course._id)}>Delete</button>
