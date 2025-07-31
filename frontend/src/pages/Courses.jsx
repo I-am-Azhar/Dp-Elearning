@@ -22,12 +22,16 @@ export default function Landing() {
   };
 
   return (
-    <div id="landing-page" className="max-w-2xl mx-auto mt-10">
-      <h1 className="text-3xl font-bold mb-6 text-center">Welcome to DP-Elearning Platform</h1>
-      <div className="grid gap-6">
-        {courses.map(course => (
-          <CourseCard key={course._id} course={course} onBuy={handleBuy} />
-        ))}
+    <div className="min-h-screen bg-[#FFDDD2] py-8">
+      <div className="max-w-7xl mx-auto px-4">
+        <h1 className="text-3xl font-bold mb-8 text-center text-black">
+          Explore Courses
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {courses.map(course => (
+            <CourseCard key={course._id} course={course} onBuy={handleBuy} />
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,12 @@
 const express = require('express');
 const { authMiddleware, requireRole } = require('../middleware/auth');
-const { register, login } = require('../controllers/authController');
+const { register, login, googleAuth } = require('../controllers/authController');
 
 const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
+router.post('/google', googleAuth);
 
 // Get current user info
 router.get('/me', authMiddleware, (req, res) => {

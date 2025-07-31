@@ -8,7 +8,7 @@ export default function Navbar() {
   const isMyCourses = location.pathname === "/dashboard";
   return (
     <nav className="flex justify-between items-center p-4 bg-white/30 backdrop-blur-md text-black shadow-md w-full rounded-b-2xl">
-      <div className="flex items-center gap-2">
+      <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer">
         {/* Logo image */}
         <img src={logo1} alt="DP Logo" className="h-10 w-10 object-contain mr-2 " />
         <span className="font-bold text-xl select-none">
@@ -17,7 +17,7 @@ export default function Navbar() {
           <span className="">E</span>
           <span className="text-blue-500 drop-shadow-[0_0_6px_#3B82F6]">Learning</span>
         </span>
-      </div>
+      </Link>
       <div className="flex items-center gap-4">
         {user ? (
           <>
@@ -25,7 +25,7 @@ export default function Navbar() {
               to="/dashboard"
               className={`font-medium text-blue-500 underline-offset-4 transition hover:underline focus:underline active:underline ${isMyCourses ? 'underline' : ''}`}
             >
-              My Courses
+              My Profile
             </Link>
             <button
               onClick={logout}

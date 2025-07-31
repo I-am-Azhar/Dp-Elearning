@@ -1,91 +1,195 @@
- # Elearn Backend (MERN, Firebase Auth, Stripe, Cloudinary)
+# DigitalPa E-Learning Platform
 
-This is a secure backend for a learning platform built with Node.js, Express, MongoDB, Firebase Auth, Stripe, and Cloudinary.
+A modern e-learning platform built with React, Node.js, and MongoDB Atlas. Features include user authentication, course management, Google OAuth, and payment integration.
 
-## 📦 Prerequisites
-- [Node.js](https://nodejs.org/) (v16+ recommended)
-- [MongoDB](https://www.mongodb.com/) (local or cloud)
-- Stripe account (for payments)
-- Firebase project (for authentication)
-- Cloudinary account (for video hosting)
+## 🚀 Features
 
-## 🚀 Getting Started
+- **User Authentication**: Email/password and Google OAuth
+- **Course Management**: Browse, purchase, and track courses
+- **User Profiles**: View purchased courses and account information
+- **Payment Integration**: Stripe payment processing
+- **Responsive Design**: Modern UI with Tailwind CSS
+- **Real-time Updates**: Live course progress tracking
 
-### 1. **Clone the repository**
+## 🛠️ Tech Stack
+
+### Frontend
+- React 19
+- Vite
+- Tailwind CSS
+- Framer Motion
+- Firebase (Authentication)
+- Axios
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB Atlas
+- JWT Authentication
+- Stripe (Payments)
+- Firebase Admin SDK
+
+## 📁 Project Structure
+
 ```
-git clone <your-repo-url>
+Elearn/
+├── frontend/          # React application
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── context/
+│   │   └── config/
+│   └── public/
+├── server/            # Node.js backend
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   └── config/
+└── .env               # Environment variables
+```
+
+## 🔧 Setup Instructions
+
+### Prerequisites
+- Node.js (v18 or higher)
+- MongoDB Atlas account
+- Firebase project
+- Stripe account (optional)
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
 cd Elearn
 ```
 
-### 2. **Install dependencies**
-Run this in the project root (where `package.json` is):
-```
+### 2. Install Dependencies
+```bash
+# Install root dependencies
+npm install
+
+# Install frontend dependencies
+cd frontend
+npm install
+
+# Install server dependencies
+cd ../server
 npm install
 ```
-This will create a `node_modules` folder in the root, which is correct.
 
-### 3. **Configure environment variables**
-- Go to the `server` folder.
-- Copy `.env.example` to `.env`:
-  ```
-  cp server/.env.example server/.env
-  ```
-- Open `server/.env` and fill in your credentials:
-  - MongoDB URI
-  - Firebase credentials
-  - Stripe keys
-  - Cloudinary keys
-  - Allowed frontend origins
+### 3. Environment Configuration
 
-### 4. **Start MongoDB**
-- If using local MongoDB, make sure it is running.
+#### Backend (.env in root directory)
+Copy `env.example` to `.env` and configure:
 
-### 5. **Run the backend server**
+```env
+# Required
+MONGO_URI=mongodb......
+JWT_SECRET=your_super_secret_jwt_key_here
+
+# Optional (for full functionality)
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_CLIENT_EMAIL=your_firebase_client_email
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour private key here\n-----END PRIVATE KEY-----"
+FRONTEND_URL=http://localhost:5173
+PORT=5000
 ```
-npm run start
-# or for auto-reload during development:
+
+#### Frontend (.env in frontend directory)
+Copy `frontend/env.example` to `frontend/.env` and configure:
+
+```env
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+### 4. Start Development Servers
+
+#### Backend
+```bash
+cd server
+npm start
+# or
+node app.js
+```
+
+#### Frontend
+```bash
+cd frontend
 npm run dev
 ```
-- The server entry point is `server/app.js`.
-- By default, the API runs on `http://localhost:5000`.
 
-## 🔑 Authentication
-- All protected endpoints require an `Authorization: Bearer <Firebase_ID_Token>` header.
-- Admin-only endpoints require the user to have `role: 'admin'` in MongoDB.
+## 🔐 Security Notes
 
-## 📚 API Endpoints
+⚠️ **IMPORTANT**: Never commit `.env` files to version control. They contain sensitive information like API keys and database credentials.
 
-### Auth
-| Method | Endpoint              | Access      | Description                       |
-|--------|-----------------------|-------------|-----------------------------------|
-| GET    | `/api/auth/me`        | Protected   | Get current user info             |
-| GET    | `/api/auth/admin`     | Admin only  | Test admin access                 |
+- All `.env` files are already in `.gitignore`
+- Use `env.example` files as templates
+- Generate new JWT secrets for production
+- Use environment-specific Firebase projects
+
+## 🚀 Deployment
+
+### Backend (Heroku/Vercel/Railway)
+1. Set environment variables in your hosting platform
+2. Deploy the `server/` directory
+3. Ensure MongoDB Atlas network access includes your hosting IP
+
+### Frontend (Vercel/Netlify)
+1. Set environment variables in your hosting platform
+2. Deploy the `frontend/` directory
+3. Update `FRONTEND_URL` in backend environment
+
+## 📊 Database Schema
+
+### Users
+- name, email, password, googleId, photoURL
+- role (user/admin), purchasedCourses
+- timestamps
 
 ### Courses
-| Method | Endpoint              | Access      | Description                       |
-|--------|-----------------------|-------------|-----------------------------------|
-| GET    | `/api/courses/`       | Public      | List all courses                  |
-| GET    | `/api/courses/:id`    | Protected   | Get course details (if purchased) |
-| POST   | `/api/courses/`       | Admin only  | Create a new course               |
-| PUT    | `/api/courses/:id`    | Admin only  | Update a course                   |
-| DELETE | `/api/courses/:id`    | Admin only  | Delete a course                   |
+- title, description, price, thumbnail
+- originalPrice, discountedPrice, discount
+- features, videoLinks, type, language
+- timestamps
+
+## 🔧 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/google` - Google OAuth
+
+### Courses
+- `GET /api/courses` - Get all courses
+- `GET /api/courses/:id` - Get course details
+- `POST /api/courses` - Create course (admin)
 
 ### Payments
-| Method | Endpoint                      | Access      | Description                                 |
-|--------|-------------------------------|-------------|---------------------------------------------|
-| POST   | `/api/payments/initiate`      | Protected   | Initiate Stripe Checkout for a course       |
-| POST   | `/api/payments/webhook`       | Public      | Stripe webhook for payment confirmation     |
+- `POST /api/payments/initiate` - Start payment
+- `POST /api/payments/webhook` - Stripe webhook
 
-### Videos
-| Method | Endpoint                  | Access      | Description                                 |
-|--------|---------------------------|-------------|---------------------------------------------|
-| POST   | `/api/videos/get-url`     | Protected   | Get signed video URL (if purchased)         |
+## 🤝 Contributing
 
-## 🛠️ Tips
-- Never commit your `.env` file to GitHub.
-- For Stripe webhooks, use the Stripe CLI or dashboard to forward events to your local server.
-- For Cloudinary, store only the public ID of videos in the course model.
-- For Firebase, use a service account for backend verification.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-## ❓ Need Help?
-If you get stuck, search for errors in your terminal or ask for help!
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+For issues and questions:
+1. Check the existing issues
+2. Create a new issue with detailed information
+3. Include environment details and error logs

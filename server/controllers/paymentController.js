@@ -3,7 +3,13 @@ const { z } = require('zod');
 const User = require('../models/User');
 const Course = require('../models/Course');
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+// Check if Stripe is properly configured
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.error('⚠️  STRIPE_SECRET_KEY is not configured. Payment functionality will be disabled.');
+  console.error('Please add STRIPE_SECRET_KEY to your .env file');
+}
+
+const stripe = process.env.STRIPE_SECRET_KEY ? Stripe(process.env.STRIPE_SECRET_KEY) : null;
 
 const initiateSchema = z.object({
   courseId: z.string().min(1),
@@ -11,6 +17,13 @@ const initiateSchema = z.object({
 
 async function initiatePurchase(req, res) {
   try {
+    // Check if Stripe is configured
+    if (!stripe) {
+      return res.status(503).json({ 
+        error: 'Payment service is not configured. Please contact support.' 
+      });
+    }
+
     const { courseId } = initiateSchema.parse(req.body);
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ error: 'Course not found' });
@@ -48,6 +61,13 @@ async function initiatePurchase(req, res) {
 
 // Webhook handler
 async function handleWebhook(req, res) {
+  // Check if Stripe is configured
+  if (!stripe) {
+    return res.status(503).json({ 
+      error: 'Payment service is not configured' 
+    });
+  }
+
   const sig = req.headers['stripe-signature'];
   let event;
   try {

@@ -4,8 +4,16 @@ const { z } = require('zod');
 
 const courseSchema = z.object({
   title: z.string().min(1),
+  subtitle: z.string().optional(),
   description: z.string().optional(),
-  price: z.number().positive(),
+  type: z.string().optional(),
+  language: z.string().optional(),
+  originalPrice: z.number().positive(),
+  discountedPrice: z.number().positive(),
+  discount: z.string().optional(),
+  badge: z.string().optional(),
+  features: z.array(z.string()).optional(),
+  price: z.number().positive(), // Keep for backward compatibility
   videoLinks: z.array(z.string().url()).optional(),
   thumbnail: z.string().url().optional(),
 });
