@@ -7,7 +7,7 @@ export default function Navbar() {
   const location = useLocation();
   const isMyCourses = location.pathname === "/dashboard";
   return (
-    <nav className="flex justify-between items-center p-4 bg-black text-white shadow-md w-full">
+    <nav className="flex justify-between items-center p-4 bg-white/30 backdrop-blur-md text-black shadow-md w-full rounded-b-2xl">
       <div className="flex items-center gap-2">
         {/* Logo image */}
         <img src={logo1} alt="DP Logo" className="h-10 w-10 object-contain mr-2 " />
@@ -29,7 +29,7 @@ export default function Navbar() {
             </Link>
             <button
               onClick={logout}
-              className="ml-2 bg-red-500 hover:bg-red-700 px-4 py-1 rounded transition shadow-lg"
+              className="ml-2 bg-red-500 hover:bg-red-700 px-4 py-1 rounded transition shadow-lg text-white"
             >
               Logout
             </button>
